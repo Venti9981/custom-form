@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #4285f4;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+            text-align: center; /* Center align the text in all cells */
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        canvas {
+            display: block;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background-color: #4285f4;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #1967be;
+        }
+
+        .canvas-error {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form id="customerForm" onsubmit="return validateCanvas()">
+        <h2>Customer Information</h2>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" placeholder="Example:Haneda Airport Terminal 3, 2-6-5 Haneda Kuko, Ota-ku, Tokyo" required>
+
+        <label for="surname">Surname:</label>
+        <input type="text" id="surname" name="surname" placeholder="Example:Sorano" required>
+
+        <label for="givenName">Given Name (Middle Name):</label>
+        <input type="text" id="givenName" name="givenName" placeholder="Example:Taro">
+
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Example:+81 00-0000-0000" required>
+
+        <label for="returnDate">Return Date:</label>
+        <input type="date" id="returnDate" name="returnDate" required>
+
+        <label for="flightNumber">Flight Number:</label>
+        <!-- Delete either language as neccessary -->
+        <input type="text" id="flightNumber" name="flightNumber" placeholder="Example:NH787 (Enter the flight number departing for Japan. / 日本到着時の便名を入力。)" required>
+
+        <label for="departureCity">City of Departure:</label>
+        <!-- Delete either language as neccessary -->
+        <input type="text" id="departureCity" name="departureCity" placeholder="Example:New York (Enter the last city before arriving in Japan. / 日本到着前の所在地を入力。)" required>
+
+        <h2>Unretrieved Baggage Information</h2>
+        <label for="unretrievedBags">Numbers of Bag/s:</label>
+        <input type="number" id="unretrievedBags" name="unretrievedBags" placeholder="Example:2" required>
+
+        <label for="reason">Reason (Select answer):</label>
+        <select id="reason" name="reason" required>
+            <option value="">Select answer</option>
+            <!-- Delete either language as neccessary -->
+            <option value="The bag did not arrive with me. / 未着であった為">The bag did not arrive with me. / 未着であった為</option>
+            <option value="The item has been lost. / 遺失物となった為">The item has been lost. / 遺失物となった為</option>
+            <option value="I forgot to retrieve it at the baggage claims. / 未引き取りであった為">I forgot to retrieve it at the baggage claims. / 未引き取りであった為</option>
+        </select>
+
+        <label for="restrictedGoods">Restricted Goods (Select answer):</label>
+        <select id="restrictedGoods" name="restrictedGoods" required>
+            <option value="">Select answer</option>
+            <!-- Delete either language as neccessary -->
+            <option value="有り">Included / 有り</option>
+            <option value="無し">Not included / 無し</option>
+        </select>
+
+        <h2>Baggage Details</h2>
+        <table border="1">
+            <tr>
+                <th>Item name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+            <tr>
+                <td><input type="text" name="itemName1" style="text-align: center;" placeholder="Example : Wine" required></td>
+                <td><input type="text" name="quantity1" style="text-align: center;" placeholder="3 Bottles" required></td>
+                <td><input type="text" name="price1" style="text-align: center;" placeholder="$300" required></td>
+            </tr>
+            <tr>
+                <td><input type="text" name="itemName2" style="text-align: center;"></td>
+                <td><input type="text" name="quantity2" style="text-align: center;"></td>
+                <td><input type="text" name="price2" style="text-align: center;"></td>
+            </tr>
+            <tr>
+                <td><input type="text" name="itemName3" style="text-align: center;"></td>
+                <td><input type="text" name="quantity3" style="text-align: center;"></td>
+                <td><input type="text" name="price3" style="text-align: center;"></td>
+            </tr><tr>
+                <td><input type="text" name="itemName4" style="text-align: center;"></td>
+                <td><input type="text" name="quantity4" style="text-align: center;"></td>
+                <td><input type="text" name="price4" style="text-align: center;"></td>
+            </tr>
+
+            </tr>
+            <!-- Add more rows as needed -->
+        </table>
+
+        <h2>Entry Method</h2>
+        <label for="entryMethod">Entry Method:</label>
+        <select id="entryMethod" name="entryMethod" required>
+            <option value="">Select answer</option>
+            <!-- Delete either language as neccessary -->
+            <option value="Entry endorsement stamped on passport. / パスポートに入国印あり">Entry endorsement stamped on passport. / パスポートに入国印あり</option>
+            <option value="No entry endoresement stamped due to usage of autogate. / 自動化ゲート使用の為入国印なし">No entry endoresement stamped due to usage of autogate. / 自動化ゲート使用の為入国印なし</option>
+            <option value="Entered with Military ID. / ミリタリーIDにて入国">Entered with Military ID. / ミリタリーIDにて入国</option>
+        </select>
+
+        <h2>Signature</h2>
+        <div class="canvas-error" id="canvasError"></div>
+        <!-- Change canvas size here -->
+        <canvas id="signatureCanvas" width="600" height="200" style="border:1px solid #ddd;"></canvas>
+        <button type="button" onclick="resetCanvas()">Reset</button>
+
+        <br><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const canvas = document.getElementById('signatureCanvas');
+            const ctx = canvas.getContext('2d');
+            let drawing = false;
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            canvas.addEventListener('touchstart', startDrawing);
+            canvas.addEventListener('touchmove', draw);
+            canvas.addEventListener('touchend', stopDrawing);
+
+            function startDrawing(e) {
+                e.preventDefault();
+                drawing = true;
+                draw(e);
+            }
+
+            function draw(e) {
+                e.preventDefault();
+                if (!drawing) return;
+
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#333';
+
+                const x = e.clientX || e.touches[0].clientX;
+                const y = e.clientY || e.touches[0].clientY;
+
+                ctx.lineTo(x - canvas.getBoundingClientRect().left, y - canvas.getBoundingClientRect().top);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(x - canvas.getBoundingClientRect().left, y - canvas.getBoundingClientRect().top);
+            }
+
+            function stopDrawing() {
+                drawing = false;
+                ctx.beginPath();
+            }
+        });
+
+        function validateCanvas() {
+            const canvas = document.getElementById('signatureCanvas');
+            const ctx = canvas.getContext('2d');
+            const canvasError = document.getElementById('canvasError');
+
+            if (ctx.getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0)) {
+                canvasError.textContent = '';
+                return true;
+            } else {
+                canvasError.textContent = 'Please provide a signature.';
+                return false;
+            }
+        }
+
+        function resetCanvas() {
+            const canvas = document.getElementById('signatureCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>
